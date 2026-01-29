@@ -2,11 +2,22 @@ import Top100Header from './Top100Header';
 import TopItem from './TopItem';
 import useAxios from './../../hooks/useAxios';
 import { getTopGainers } from '../../api/top100/stockApi';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import Modal from '../common/Modal';
+import NewsList from '../news/NewsList';
+import { Top100SkeletonList } from './Top100Skeleton';
 
 const Top100List = ({ limit = 100 }) => {
     const url = getTopGainers();
     const { state, loading, error } = useAxios(url);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedStock, setSelectedStock] = useState('');
+
+    const handleStockClick = (name) => {
+        setSelectedStock(name);
+        setIsModalOpen(true);
+    };
 
     const topGainers = useMemo(() => {
         const rawItems = state?.response?.body?.items?.item || [];
@@ -30,7 +41,6 @@ const Top100List = ({ limit = 100 }) => {
             });
     }, [state, limit]);
 
-    if (loading) return <div className="loading-state">데이터를 실시간으로 분석 중입니다...</div>;
     if (error) return <div className="error-state">데이터 로드 실패: {error}</div>;
 
     return (
@@ -39,11 +49,22 @@ const Top100List = ({ limit = 100 }) => {
             <div className="top100-list-container">
                 <Top100Header />
                 <ul className="top100-items">
-                    {topGainers.map((stock) => (
-                        <TopItem key={stock.code} {...stock} />
-                    ))}
+                    {loading ? (
+                        <Top100SkeletonList count={limit > 20 ? 15 : limit} />
+                    ) : (
+                        topGainers.map((stock) => (
+                            <TopItem key={stock.code} {...stock} onItemClick={handleStockClick} />
+                        ))
+                    )}
                 </ul>
             </div>
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={selectedStock}>
+                <NewsList
+                    isFullPage={false}
+                    initialDisplay={5}
+                    forcedQuery={selectedStock} // 종목명으로 뉴스 검색
+                />
+            </Modal>
         </section>
     );
 };

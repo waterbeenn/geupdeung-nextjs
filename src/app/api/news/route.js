@@ -4,14 +4,14 @@ import axios from 'axios';
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('query') || '경제';
-    const display = searchParams.get('display') || 12; // ✅ 기본값 설정
-    const start = searchParams.get('start') || 1;     // ✅ 시작 위치 추가
+    const display = searchParams.get('display') || 12;
+    const start = searchParams.get('start') || 1;
 
     try {
         const response = await axios.get('https://openapi.naver.com/v1/search/news.json', {
             params: {
                 query: query,
-                display: 12, // 가져올 뉴스 개수
+                display: display,
                 start: start,
                 sort: 'sim', // 유사도순 (날짜순은 'date')
             },

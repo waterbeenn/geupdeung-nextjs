@@ -1,9 +1,9 @@
-const TopItem = ({ rank, name, code, price, change, percent, isUp }) => {
+const TopItem = ({ rank, name, code, price, change, percent, onItemClick }) => {
     const numericPercent = parseFloat(percent);
     const statusClass = numericPercent > 0 ? 'up' : numericPercent < 0 ? 'down' : 'zero';
 
     return (
-        <li className="top100-item">
+        <li className="top100-item" onClick={() => onItemClick(name)}>
             <div className="rank">{rank}</div>
             <div className="name-group">
                 <span className="name">{name}</span>

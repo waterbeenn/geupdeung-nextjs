@@ -4,8 +4,9 @@ import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import NewsItem from './NewsItem';
 import { NEWS_CATEGORIES, DEFAULT_CATEGORY } from '../../api/news/categories';
+import { NewsSkeletonList } from './NewsSkeleton';
 
-const NewsList = ({ limit, initialDisplay = 12, isFullPage = false }) => {
+const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery = null }) => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false); // ✅ 더보기 전용 로딩
@@ -66,8 +67,11 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false }) => {
 
     useEffect(() => {
         setStart(1); // 시작점 초기화
-        fetchNews(activeCategory, 1, false);
-    }, [activeCategory, fetchNews]);
+        const targetQuery = forcedQuery
+            ? { name: forcedQuery, query: forcedQuery }
+            : activeCategory;
+        fetchNews(targetQuery, 1, false);
+    }, [activeCategory, fetchNews, forcedQuery]);
 
     const handleLoadMore = () => {
         const displayCount = isFullPage ? 20 : initialDisplay;
@@ -80,8 +84,8 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false }) => {
 
     return (
         <section className="news-section">
-            <h2>최신 경제 뉴스</h2>
-            {!limit && (
+            {!forcedQuery && <h2>최신 경제 뉴스</h2>}
+            {!limit && !forcedQuery && (
                 <div className="news-tabs">
                     {NEWS_CATEGORIES.map((cat) => (
                         <button
@@ -98,10 +102,7 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false }) => {
                 {error && <div className="error-message">{error}</div>}
 
                 {loading && news.length === 0 ? (
-                    <div className="loading-area">
-                        <div className="spinner"></div>
-                        <p>뉴스를 업데이트하고 있습니다...</p>
-                    </div>
+                    <NewsSkeletonList count={isFullPage ? 8 : 4} />
                 ) : (
                     <ul className="news-list">
                         {displayedNews.map((item) => (
@@ -109,6 +110,7 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false }) => {
                         ))}
                     </ul>
                 )}
+                {loadingMore && <NewsSkeletonList count={4} />}
                 {isFullPage && !limit && (
                     <div className="load-more-container">
                         <button
