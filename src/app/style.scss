@@ -1,0 +1,401 @@
+$primary-blue: #2563eb;
+$text-main: #1f2937;
+$text-sub: #6b7280;
+$up-red: #ef4444;
+$down-blue: #3b82f6;
+$white: #ffffff;
+$shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+$gray-light: #f3f4f6;
+$border-color: #e5e7eb;
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; // 화면 전체 높이를 차지하도록 설정
+
+    .content-area {
+        flex: 1; // Header와 Footer를 제외한 나머지 모든 공간을 차지
+        width: 100%;
+        max-width: 1200px; // 데스크탑 기준 중앙 정렬 너비
+        margin: 0 auto;
+        padding: 20px;
+    }
+}
+
+.stock-index-list {
+    padding: 3px;
+    margin: 0;
+    margin-top: 20px;
+    list-style: none;
+
+    .stock-index-item {
+        background-color: #ffffff;
+        width: 100%;
+        margin-top: 20px;
+        height: 80px;
+        border-radius: 12px;
+        border: 1px solid #f3f4f6;
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.05),
+            0 2px 4px -1px rgba(0, 0, 0, 0.03); // 헤더 스타일 그림자
+        padding: 16px; // 내부 여백 추가
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            transform: translateY(-2px); // 살짝 떠오르는 효과
+            border-color: $primary-blue; // 호버 시 헤더 포인트 컬러로 강조
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
+        }
+
+        .placeholder {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            .name,
+            .price {
+                display: block;
+            }
+
+            .name {
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: $text-sub; // 이름은 보조 텍스트 색상
+                letter-spacing: -0.02em;
+            }
+            .price {
+                font-size: 1.15rem;
+                font-weight: 700;
+                color: $text-main; // 가격은 메인 텍스트 색상
+            }
+        }
+    }
+}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+    padding: 10px 5px;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    /* Center slide text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    width: 42px;
+    height: 42px;
+    background-color: $white;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); // 테두리 대신 부드러운 그림자
+    transition: all 0.3s ease;
+    margin: 5px;
+
+    &::after,
+    svg {
+        display: none !important;
+    }
+
+    // 2. CSS로 직접 화살표 그리기
+    &::before {
+        content: '';
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-top: 2px solid $text-main;
+        border-right: 2px solid $text-main;
+        transition: border-color 0.3s ease;
+    }
+
+    &:hover {
+        background-color: $primary-blue;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+
+        &::before {
+            border-color: $white;
+        }
+    }
+}
+
+// 4. 화살표 방향 회전
+.swiper-button-prev {
+    &::before {
+        transform: rotate(-135deg) translateX(-1px); // 왼쪽 화살표
+        margin-left: 3px;
+    }
+}
+
+.swiper-button-next {
+    &::before {
+        transform: rotate(45deg) translateX(-1px); // 오른쪽 화살표
+        margin-right: 3px;
+    }
+}
+
+/* 뉴스 섹션 스타일 */
+.news-section {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $text-main;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+            content: '📰';
+            font-size: 1.4rem;
+        }
+    }
+}
+.news-tabs {
+    display: flex;
+    gap: 0.3rem;
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    scrollbar-width: none;
+
+    .tab-btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        border: 1px solid $border-color;
+        background-color: $white;
+        color: $text-sub;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+
+        &:hover {
+            background-color: $gray-light;
+            border-color: darken($border-color, 10%);
+        }
+
+        &.active {
+            background-color: $primary-blue;
+            color: $white;
+            border-color: $primary-blue;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+
+            &::before {
+                content: '✔';
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+.news-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0;
+    list-style: none;
+
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr; // 태블릿 이상에선 2줄
+    }
+}
+
+.news-item {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #f3f4f6;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+
+    &:hover {
+        transform: translateY(-3px);
+        border-color: #2563eb; // $primary-blue
+        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
+    }
+
+    a {
+        display: block;
+        padding: 20px;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        line-height: 1.4;
+        color: #1f2937;
+        margin-bottom: 10px;
+
+        // 말줄임표 처리 (2줄)
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+
+        b {
+            // color: #ef4444; // 네이버 API의 검색어 강조색 (빨간색)
+            // font-weight: 700;
+        }
+    }
+
+    p {
+        font-size: 0.9rem;
+        color: #6b7280; // $text-sub
+        line-height: 1.6;
+        margin-bottom: 15px;
+
+        // 말줄임표 처리 (3줄)
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .news-date {
+        font-size: 0.8rem;
+        color: #9ca3af;
+        display: block;
+        text-align: right;
+    }
+}
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+    padding-bottom: 2rem;
+
+    .load-more-btn {
+        padding: 0.8rem 2.5rem;
+        background-color: transparent;
+        border: 1px solid $primary-blue;
+        color: $primary-blue;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover:not(:disabled) {
+            background-color: $primary-blue;
+            color: $white;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+// 로딩 및 에러 메시지 스타일
+.loading-area,
+.error-message {
+    text-align: center;
+    padding: 3rem;
+    background: $gray-light;
+    border-radius: 12px;
+    color: $text-sub;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+// Footer Style
+.main-footer {
+    background-color: #1f2937; // $text-main 보다 약간 연한 다크 그레이
+    color: #9ca3af;
+    padding: 3rem 1rem 1.5rem;
+    margin-top: 5rem; // 뉴스 리스트와 충분한 간격
+
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .footer-logo {
+        color: #ffffff;
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        span {
+            color: #3b82f6;
+        } // 포인트 컬러
+    }
+
+    .footer-desc {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        max-width: 400px;
+    }
+
+    .link-group {
+        h4 {
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.85rem;
+            li {
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+
+    .footer-bottom {
+        grid-column: 1 / -1;
+        border-top: 1px solid #374151;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        text-align: center;
+
+        .copyright {
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+    }
+}

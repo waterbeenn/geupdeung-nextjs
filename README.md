@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Geupdeung (급등)
 
-## Getting Started
+이 프로젝트는 급등하는 주식 정보와 최신 경제 뉴스를 사용자에게 제공하는 웹 애플리케이션입니다. Next.js를 사용하여 개발되었으며, 서버 사이드 렌더링과 클라이언트 사이드 렌더링을 조합하여 최적의 사용자 경험을 제공합니다.
 
-First, run the development server:
+## ✨ 주요 기능
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **실시간 주가지수**: 주요 주가지수 정보를 실시간으로 표시합니다.
+- **TOP 100 급등주 목록**: 가장 많이 상승한 100개 주식의 순위, 현재가, 등락률 정보를 제공합니다.
+- **최신 경제 뉴스**: 주요 경제 뉴스를 카테고리별로 필터링하여 볼 수 있습니다.
+
+## 💻 기술 스택
+
+- **Framework**: Next.js 14 (App Router)
+- **Library**: React 18
+- **Styling**: SCSS (Sass)
+- **HTTP Client**: Axios
+- **UI Components**: Swiper.js
+
+## 🌐 API 활용
+
+이 프로젝트는 동적인 데이터 표시를 위해 외부 API를 적극적으로 활용합니다. 학습의 일환으로 Next.js의 API Route를 백엔드 프록시(proxy)로 사용하여 외부 API 키를 숨기고, 클라이언트 측에서는 이 API Route를 호출하는 안전한 방식으로 구현했습니다.
+
+- **주식 정보 API**:
+    - **기능**: 국내 주식의 TOP 100 순위, 개별 종목의 시세, 등락률 등 실시간 데이터를 가져옵니다.
+    - **구현**: `src/app/api/top100/` 경로에서 외부 금융 API를 호출하여 클라이언트에 필요한 형태로 가공한 후 제공합니다.
+
+- **뉴스 데이터 API**:
+    - **기능**: 네이버 검색 API를 활용하여 '경제', '증권' 등 특정 카테고리의 최신 뉴스를 수집합니다.
+    - **구현**: `src/app/api/news/` 경로에서 네이버 API를 호출하고, 수집된 데이터를 클라이언트에 전달하여 뉴스 목록을 생성합니다.
+
+## 🗂️ 프로젝트 구조
+
+프로젝트의 주요 디렉터리 구조는 다음과 같습니다.
+
+```
+.
+├── public/              # 정적 파일 (이미지, 폰트 등)
+├── src/
+│   ├── api/             # API 관련 로직 및 데이터 (뉴스 카테고리, 목 데이터 등)
+│   ├── app/             # Next.js App Router 기반 페이지 및 라우팅
+│   │   ├── /            # 메인 페이지 (page.js)
+│   │   ├── news/        # 뉴스 전체 목록 페이지
+│   │   └── top100/      # 급등주 전체 목록 페이지
+│   ├── components/      # 재사용 가능한 UI 컴포넌트
+│   │   ├── common/      # 로딩, 차트 등 공통 컴포넌트
+│   │   ├── layout/      # Header, Footer 등 레이아웃 컴포넌트
+│   │   ├── main/        # 메인 페이지 관련 컴포넌트
+│   │   ├── news/        # 뉴스 관련 컴포넌트 (NewsList, NewsItem)
+│   │   └── top100/      # 급등주 관련 컴포넌트 (Top100List, TopItem)
+│   └── hooks/           # 커스텀 훅 (데이터 페칭, 페이지네이션 등)
+├── next.config.ts       # Next.js 설정 파일
+└── package.json         # 프로젝트 의존성 및 스크립트
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 시작하기
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1.  **의존성 설치**:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    ```bash
+    npm install
+    ```
 
-## Learn More
+2.  **개발 서버 실행**:
 
-To learn more about Next.js, take a look at the following resources:
+    ```bash
+    npm run dev
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    브라우저에서 `http://localhost:3000` 주소로 접속하여 애플리케이션을 확인할 수 있습니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📜 사용 가능한 스크립트
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev`: 개발 모드로 Next.js 애플리케이션을 실행합니다.
+- `npm run build`: 프로덕션용으로 애플리케이션을 빌드합니다.
+- `npm run start`: 빌드된 프로덕션 서버를 시작합니다.
+- `npm run lint`: ESLint를 사용하여 코드 스타일을 검사하고 문제를 찾습니다.

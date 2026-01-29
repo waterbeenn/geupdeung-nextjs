@@ -1,0 +1,114 @@
+$primary-blue: #2563eb;
+$border-color: #e5e7eb;
+$text-main: #1f2937;
+$market-open: #059669;
+$market-before: #d97706;
+$market-closed: #6b7280;
+
+.main-header {
+    width: 100%;
+    height: 64px;
+    background-color: #ffffff;
+    border-bottom: 1px solid $border-color;
+    position: sticky; // 스크롤 해도 상단에 고정
+    top: 0;
+    z-index: 100;
+
+    .header-inner {
+        max-width: 1200px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: $primary-blue;
+        }
+    }
+
+    .header-menu {
+        flex: 1; // 중앙 공간 차지
+        display: flex;
+        justify-content: center; // 중앙 정렬
+
+        ul {
+            display: flex;
+            gap: 40px; // 메뉴 사이 간격
+            list-style: none;
+
+            li {
+                a {
+                    text-decoration: none;
+                    color: #4b5563;
+                    font-weight: 600;
+                    font-size: 1rem;
+                    transition: color 0.2s ease;
+
+                    &:hover {
+                        color: $primary-blue;
+                    }
+
+                    &.active {
+                        color: $primary-blue;
+                    }
+                }
+            }
+        }
+    }
+
+    .status-container {
+        display: flex;
+        gap: 12px;
+
+        .market-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background-color: #f3f4f6;
+
+            .dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background-color: #9ca3af;
+            }
+
+            &.open {
+                color: $market-open;
+                background-color: #ecfdf5;
+                .dot {
+                    background-color: $market-open;
+                }
+            }
+
+            &.before {
+                color: $market-before;
+                background-color: #fffbeb;
+                .dot {
+                    background-color: $market-before;
+                }
+            }
+
+            &.closed {
+                color: $market-closed;
+                background-color: #f3f4f6;
+                .dot {
+                    background-color: $market-closed;
+                }
+            }
+        }
+    }
+}
