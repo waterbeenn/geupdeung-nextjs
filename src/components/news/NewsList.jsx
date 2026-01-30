@@ -9,10 +9,10 @@ import { NewsSkeletonList } from './NewsSkeleton';
 const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery = null }) => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false); // ✅ 더보기 전용 로딩
+    const [loadingMore, setLoadingMore] = useState(false);
     const [activeCategory, setActiveCategory] = useState(DEFAULT_CATEGORY);
     const [error, setError] = useState(null);
-    const [start, setStart] = useState(1); // ✅ 네이버 API 시작 지점
+    const [start, setStart] = useState(1);
 
     const fetchNews = useCallback(
         async (category, startPos, isAppend = false) => {
@@ -59,10 +59,10 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery 
                 console.error('뉴스 로드 실패:', err);
             } finally {
                 setLoading(false);
-                setLoadingMore(false); // Ensure loadingMore is reset
+                setLoadingMore(false);
             }
         },
-        [initialDisplay, isFullPage] // Added dependencies for useCallback
+        [initialDisplay, isFullPage]
     );
 
     useEffect(() => {
@@ -77,7 +77,11 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery 
         const displayCount = isFullPage ? 20 : initialDisplay;
         const nextStart = start + displayCount;
         setStart(nextStart);
-        fetchNews(activeCategory, nextStart, true);
+        const targetCategory = forcedQuery
+            ? { name: forcedQuery, query: forcedQuery }
+            : activeCategory;
+
+        fetchNews(targetCategory, nextStart, true);
     };
 
     const displayedNews = limit ? news.slice(0, limit) : news;
@@ -104,7 +108,7 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery 
                 {loading && news.length === 0 ? (
                     <NewsSkeletonList count={isFullPage ? 8 : 4} />
                 ) : (
-                    <ul className="news-list">
+                    <ul className={`news-list ${isFullPage ? 'full-view' : ''}`}>
                         {displayedNews.map((item) => (
                             <NewsItem key={item.link} {...item} />
                         ))}
@@ -118,7 +122,11 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery 
                             onClick={handleLoadMore}
                             disabled={loadingMore}
                         >
-                            {loadingMore ? '불러오는 중...' : '뉴스 더보기 +'}
+                            {loadingMore
+                                ? '불러오는 중...'
+                                : forcedQuery
+                                    ? `'${forcedQuery}' 기사 더보기 +`
+                                    : '뉴스 더보기 +'}
                         </button>
                     </div>
                 )}

@@ -19,12 +19,12 @@ const StockIndexList = ({ indexs }) => {
                 spaceBetween={40}
                 modules={[Navigation]}
                 className="mySwiper"
-                // 반응형 설정 (모바일 고려 시 추가)
-                // breakpoints={{
-                //     320: { slidesPerView: 1 },
-                //     768: { slidesPerView: 2 },
-                //     1024: { slidesPerView: 4 },
-                // }}
+                // 반응형
+                breakpoints={{
+                    320: { slidesPerView: 1, spaceBetween: 20 },
+                    640: { slidesPerView: 2, spaceBetween: 20 },
+                    1024: { slidesPerView: 4, spaceBetween: 40 },
+                }}
             >
                 {indexs.map((index) => (
                     <SwiperSlide key={index.id}>

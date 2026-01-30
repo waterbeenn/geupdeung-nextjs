@@ -1,13 +1,15 @@
 import Top100Header from './Top100Header';
 import TopItem from './TopItem';
 import useAxios from './../../hooks/useAxios';
-import { getTopGainers } from '../../api/top100/stockApi';
-import { useMemo, useState } from 'react';
 import Modal from '../common/Modal';
 import NewsList from '../news/NewsList';
+import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getTopGainers } from '../../api/top100/stockApi';
 import { Top100SkeletonList } from './Top100Skeleton';
 
 const Top100List = ({ limit = 100 }) => {
+    const router = useRouter();
     const url = getTopGainers();
     const { state, loading, error } = useAxios(url);
 
@@ -24,7 +26,7 @@ const Top100List = ({ limit = 100 }) => {
         if (rawItems.length === 0) return [];
 
         return [...rawItems]
-            .sort((a, b) => parseFloat(b.fltRt) - parseFloat(a.fltRt)) // 등락률(fltRt) 내림차순 정렬
+            .sort((a, b) => parseFloat(b.fltRt) - parseFloat(a.fltRt))
             .slice(0, limit) // 100위까지만 자르기
             .map((item, index) => {
                 const rawPercent = Number(item.fltRt);
@@ -61,9 +63,21 @@ const Top100List = ({ limit = 100 }) => {
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={selectedStock}>
                 <NewsList
                     isFullPage={false}
-                    initialDisplay={5}
-                    forcedQuery={selectedStock} // 종목명으로 뉴스 검색
+                    initialDisplay={10}
+                    forcedQuery={selectedStock}
                 />
+                {/* 모달 전용 더보기 버튼 추가 */}
+                <div
+                    className="modal-more-wrapper"
+                    style={{ textAlign: 'center', marginTop: '1.5rem' }}
+                >
+                    <button
+                        className="load-more-btn"
+                        onClick={() => router.push(`/news?q=${encodeURIComponent(selectedStock)}`)}
+                    >
+                        '{selectedStock}' 뉴스 전체보기 →
+                    </button>
+                </div>
             </Modal>
         </section>
     );

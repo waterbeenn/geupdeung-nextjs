@@ -20,6 +20,7 @@ $zero-gray: #6b7280; // 보합 (Gray)
 
     &:hover {
         background-color: $bg-hover;
+
         // 살짝 앞으로 튀어나오는 느낌보다는 배경색과 텍스트 강조로 깔끔하게!
         .name {
             color: $primary-blue;
@@ -42,6 +43,7 @@ $zero-gray: #6b7280; // 보합 (Gray)
             color: $text-main;
             font-size: 0.95rem;
         }
+
         .code {
             font-size: 0.75rem;
             color: $text-sub;
@@ -94,6 +96,80 @@ $zero-gray: #6b7280; // 보합 (Gray)
     }
 }
 
+// 모바일 반응형 (768px 이하)
+@media (max-width: 768px) {
+    .top100-item {
+        grid-template-columns: 30px 1fr 100px; // 순위 | 이름+코드 | 가격+등락 (합침)
+        padding: 12px 14px;
+        gap: 10px;
+
+        .rank {
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        // 이름 그룹은 그대로
+
+        // 가격과 등락을 하나의 컬럼처럼 보이게 하거나, 
+        // 등락을 아래로 내리기 위해 구조 변경 없이 CSS로 조정해야 함.
+        // 하지만 grid-template-columns를 줄였으므로, .price와 .change-group을 flex 등으로 처리하거나
+        // 여기서는 간단히 .price를 숨기고 .change-group만 보여줄 수도 있음. 
+        // 또는 grid 영역 재배치.
+
+        // 방법: grid-template-areas 사용 또는 display: flex로 변경
+        display: flex;
+        justify-content: space-between;
+
+        .rank {
+            width: 30px;
+            flex-shrink: 0;
+        }
+
+        .name-group {
+            flex-grow: 1;
+            padding-left: 10px;
+        }
+
+        // 가격과 등락을 우측에 스택으로 쌓음
+        .price {
+            display: none; // 모바일에서는 공간 부족으로 현재가 숨기고 등락률 위주로? 
+            // 아니면 아래와 같이 구조를 변경
+        }
+    }
+
+    // 모바일 전용 레이아웃 재정의 (Flexbox 활용)
+    .top100-item {
+        display: flex;
+        align-items: center;
+
+        .rank {
+            width: 30px;
+            margin-right: 10px;
+        }
+
+        .name-group {
+            flex: 1;
+        }
+
+        // 가격과 등락을 우측으로 묶어서 보여주기 위해
+        // 원래 HTML 구조상 .price와 .change-group이 형제 요소임.
+        // flex container 안에서 각각 보이게 됨.
+
+        .price {
+            display: block; // 다시 보이게
+            text-align: right;
+            font-size: 0.9rem;
+            padding-right: 10px;
+            width: auto;
+        }
+
+        .change-group {
+            align-items: flex-end;
+            width: 70px; // 등락률 영역 고정 너비
+        }
+    }
+}
+
 .top100-header {
     display: grid;
     // 아이템과 동일한 비율: 순위(50px) | 종목명(1fr) | 현재가(120px) | 등락(100px)
@@ -119,6 +195,10 @@ $zero-gray: #6b7280; // 보합 (Gray)
 
     .col-change {
         text-align: right;
+    }
+
+    @media (max-width: 768px) {
+        display: none; // 모바일에서는 헤더를 아예 숨김 (직관적이므로)
     }
 }
 

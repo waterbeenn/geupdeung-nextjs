@@ -11,7 +11,7 @@ const Footer = () => {
                         Stock <span>Dash</span>
                     </h3>
                     <p className="footer-desc">
-                        실시간 경제 뉴스 및 급등주를 한눈에 파악할 수 있는 대시보드입니다.
+                        최신 경제 뉴스 및 급등주를 한눈에 파악할 수 있는 대시보드입니다.
                     </p>
                 </div>
 

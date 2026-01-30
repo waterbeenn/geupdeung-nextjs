@@ -8,6 +8,7 @@ import Footer from '../components/layout/footer/Footer';
 export const metadata = {
     title: '주식 & 뉴스 앱',
     description: '급등주와 최신 뉴스를 확인하세요',
+    viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
 };
 
 export default function RootLayout({ children }) {

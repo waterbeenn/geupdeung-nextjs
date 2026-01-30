@@ -9,6 +9,7 @@ import './Header.scss';
 const Header = () => {
     const pathname = usePathname();
     const [status, setStatus] = useState(getMarketStatus());
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -16,6 +17,10 @@ const Header = () => {
         }, 60000); // 1분마다 갱신
         return () => clearInterval(timer);
     }, []);
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
 
     const getStatusClass = (statusText) => {
         if (statusText.includes('개장 중')) return 'open';
@@ -30,25 +35,29 @@ const Header = () => {
                 {/* 1. 로고 영역 */}
                 <div className="logo">
                     <span className="logo-icon">📈</span>
-                    <h1>StockDash</h1>
+                    <Link href="/" className={getActiveSection('/')}>
+                        <h1>StockDash</h1>
+                    </Link>
                 </div>
 
+
+
                 {/* 2. 메뉴 영역 */}
-                <nav className="header-menu">
+                <nav className={`header-menu ${isMenuOpen ? 'mobile-open' : ''}`}>
                     <ul>
                         <li>
-                            <Link href="/" className={getActiveSection('/')}>
+                            <Link href="/" className={getActiveSection('/')} onClick={() => setIsMenuOpen(false)}>
                                 시장지수
                             </Link>
                         </li>
                         <li>
                             {/* id="top100"를 찾아감 */}
-                            <Link href="/top100" className={getActiveSection('/top100')}>
+                            <Link href="/top100" className={getActiveSection('/top100')} onClick={() => setIsMenuOpen(false)}>
                                 Top 100
                             </Link>
                         </li>
                         <li>
-                            <Link href="/news" className={getActiveSection('/news')}>
+                            <Link href="/news" className={getActiveSection('/news')} onClick={() => setIsMenuOpen(false)}>
                                 뉴스/공시
                             </Link>
                         </li>
@@ -62,11 +71,22 @@ const Header = () => {
                         <span className="dot"></span>
                         {status.korStatus}
                     </div>
-                    <div className={`market-status ${getStatusClass(status.usaStatus)}`}>
+                    {/* <div className={`market-status ${getStatusClass(status.usaStatus)}`}>
                         <span className="dot"></span>
                         {status.usaStatus}
-                    </div>
+                    </div> */}
                 </div>
+
+                {/* 4. 모바일 햄버거 버튼 */}
+                <button
+                    className={`hamburger-btn ${isMenuOpen ? 'active' : ''}`}
+                    onClick={toggleMenu}
+                    aria-label="메뉴 열기"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </header>
     );
