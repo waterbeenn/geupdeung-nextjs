@@ -12,7 +12,7 @@ export default function Page() {
 
     return (
         <main>
-            <MainBanner indexs={indexs} />
+            {/* <MainBanner indexs={indexs} /> */}
             <Top100List limit={20} />
             <div className="section-wrapper">
                 <button className="btn-more" onClick={() => router.push('/top100')}>

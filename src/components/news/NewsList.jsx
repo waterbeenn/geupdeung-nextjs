@@ -17,6 +17,7 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery 
     const fetchNews = useCallback(
         async (category, startPos, isAppend = false) => {
             isAppend ? setLoadingMore(true) : setLoading(true);
+            const fetchCount = 100;
             const displayCount = isFullPage ? 20 : initialDisplay;
             setError(null);
 
@@ -24,7 +25,7 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery 
                 const res = await axios.get(`/api/news`, {
                     params: {
                         query: category.query,
-                        display: displayCount,
+                        display: fetchCount,
                         start: startPos,
                         _t: Date.now(),
                     },
@@ -47,13 +48,21 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery 
                         return matchName || matchQuery;
                     });
                 }
-                const cleanedItems = items.map((item) => ({
+
+                // 1. 데이터 가공 및 날짜 객체 생성
+                const processedItems = items.map(item => ({
                     ...item,
-                    title: item.title.replace(/<[^>]*>?/gm, ''),
-                    description: item.description.replace(/<[^>]*>?/gm, ''),
+                    pubDateObj: new Date(item.pubDate)
                 }));
 
-                setNews((prev) => (isAppend ? [...prev, ...cleanedItems] : cleanedItems));
+                // 2. '유사도' 상위권 내에서 '최신순'으로 재정렬
+                const sortedItems = processedItems.sort((a, b) => b.pubDateObj - a.pubDateObj);
+
+                setNews((prev) => {
+                    const combined = isAppend ? [...prev, ...sortedItems] : sortedItems;
+                    const uniqueNews = Array.from(new Map(combined.map(item => [item.link, item])).values());
+                    return isFullPage ? uniqueNews : uniqueNews.slice(0, limit || initialDisplay);
+                });
             } catch (err) {
                 setError('뉴스를 불러오는 중에 문제가 발생했습니다.');
                 console.error('뉴스 로드 실패:', err);
@@ -62,7 +71,7 @@ const NewsList = ({ limit, initialDisplay = 12, isFullPage = false, forcedQuery 
                 setLoadingMore(false);
             }
         },
-        [initialDisplay, isFullPage]
+        [initialDisplay, isFullPage, limit]
     );
 
     useEffect(() => {
