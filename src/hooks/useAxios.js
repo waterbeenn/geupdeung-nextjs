@@ -27,6 +27,7 @@ const useAxios = (url = '') => {
 
     // url이 변경될 때마다 데이터 재요청
     useEffect(() => {
+        if (!url) return;
         getData();
     }, [url]);
 

@@ -3,18 +3,26 @@ import TopItem from './TopItem';
 import useAxios from './../../hooks/useAxios';
 import Modal from '../common/Modal';
 import NewsList from '../news/NewsList';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getTopGainers } from '../../api/top100/stockApi';
 import { Top100SkeletonList } from './Top100Skeleton';
+import { getLatestTradingDay } from '../../util/dateHelper';
 
 const Top100List = ({ limit = 100 }) => {
     const router = useRouter();
-    const url = getTopGainers();
-    const { state, loading, error } = useAxios(url);
-
+    const [apiUrl, setApiUrl] = useState('');
+    const { state, loading, error } = useAxios(apiUrl);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedStock, setSelectedStock] = useState('');
+
+    useEffect(() => {
+        const initTradingDay = async () => {
+            const day = await getLatestTradingDay();
+            setApiUrl(getTopGainers(day)); // 날짜가 확정되면 그때 API URL을 생성
+        };
+        initTradingDay();
+    }, []);
 
     const handleStockClick = (name) => {
         setSelectedStock(name);
@@ -43,6 +51,8 @@ const Top100List = ({ limit = 100 }) => {
             });
     }, [state, limit]);
 
+    const isLoading = !apiUrl || loading;
+
     if (error) return <div className="error-state">데이터 로드 실패: {error}</div>;
 
     return (
@@ -51,7 +61,7 @@ const Top100List = ({ limit = 100 }) => {
             <div className="top100-list-container">
                 <Top100Header />
                 <ul className="top100-items">
-                    {loading ? (
+                    {isLoading ? (
                         <Top100SkeletonList count={limit > 20 ? 15 : limit} />
                     ) : (
                         topGainers.map((stock) => (
